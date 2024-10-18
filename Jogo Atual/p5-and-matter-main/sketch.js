@@ -2,32 +2,35 @@ const Motor=Matter.Engine,
       Mundo=Matter.World,
       Corpos=Matter.Bodies,
       Corpo=Matter.Bodie;
+      SAT=Matter.SAT;
 var motor,mundo
 var plataformas = [] 
 var jogador
 var inimigos = []
 var inimigo
+var fundo 
+var fundoimg
+var portal
+var nivel_atual=1
+var pontos=0
+var colisao_portal=false
+function preload() {
+fundoimg=loadImage ("image/PNG/Fundo.png"); 
+
+}
 
 function setup() {
   createCanvas(windowWidth,windowHeight)
   motor=Motor.create ()
   mundo=motor.world 
-  plataformas.push(new Plataforma (400,height-300,100,25)) // Serve pra puxar a plataforma de outro grupo.
-  plataformas.push(new Plataforma (60,height-200,100,20)) // Serve para puxar a plataforma de outro grupo.
-  plataformas.push(new Plataforma (600,height-400,100,20)) // serve para puxar a plataforma de outro grupo.
-  plataformas.push(new Plataforma (500,height -500,100,20))
-  plataformas.push(new Plataforma (400,height -600,100,20))
-  plataformas.push(new Plataforma (350,height -700,100,20))
-  jogador=new Player (60,200,15,10); // serve para determinar.
-  inimigos.push (new Inimigo (400,height -450,100,10,10,0));
-  inimigos.push (new Inimigo (500,height -550,100,10,-10,0));
+  iniciar_nivel (nivel_atual)
 }
 
 function draw() {
-
   background ("black") 
   Motor.update (motor)
   translate(-jogador.corpo.position.x+width/2,-jogador.corpo.position.y+height/2)
+  drawSprites ()
   jogador.aparecer ();
   for (var plataforma of plataformas){
     plataforma.mostrar () // Serve para mostrar a plataforma do outro grupo
@@ -41,7 +44,13 @@ function draw() {
     inimigo.mostrar()
     inimigo.mover()
   }
-  
+  if (!colisao_portal){
+    
+    verificar (jogador,portal)
+ 
+  }
+
+  portal.mostrar ();
 }
 
 function windowResized () {
@@ -74,3 +83,51 @@ function tocando_plataforma (jogador,plataforma) {
   
 }
 
+function iniciar_nivel (nivel){
+  if (nivel_atual===1){
+    nivel1 ()
+  }
+  else if (nivel_atual===2){
+    nivel2 ()
+  }
+}
+
+function nivel1 () {
+  fundo=createSprite (windowWidth/2,windowHeight/2)
+  fundo.addImage (fundoimg);
+  fundo.scale=4
+  plataformas.push(new Plataforma (400,height-300,100,25)) // Serve pra puxar a plataforma de outro grupo.
+  plataformas.push(new Plataforma (60,height-200,100,20)) // Serve para puxar a plataforma de outro grupo.
+  plataformas.push(new Plataforma (600,height-400,100,20)) // serve para puxar a plataforma de outro grupo.
+  plataformas.push(new Plataforma (500,height -500,100,20))
+  plataformas.push(new Plataforma (400,height -600,100,20))
+  plataformas.push(new Plataforma (350,height -700,100,20))
+  jogador=new Player (60,200,15,10); // serve para determinar.
+  inimigos.push (new Inimigo (400,height -450,100,10,10,0));
+  inimigos.push (new Inimigo (500,height -550,100,10,-10,0));
+  portal=new Portal (500,height -1200,50,50);
+ 
+}
+
+function verificar (jogador,portal){
+  var colisao=SAT.collides (jogador.corpo,portal.corpo);
+  if (colisao.collided) {
+   colisao_portal=true
+   pontos++
+   nivel_atual++
+  }
+}
+
+function nivel2 () {
+  
+  plataformas = []
+  plataformas.push (new Plataforma (500,height -350,100,20))
+  plataformas.push (new Plataforma (70,height -300,100,20))
+  plataformas.push(new Plataforma (600,height-400,100,20)) // serve para puxar a plataforma de outro grupo.
+  plataformas.push(new Plataforma (500,height -500,100,20))
+  plataformas.push(new Plataforma (400,height -700,100,20))
+  plataformas.push(new Plataforma (350,height -800,100,20))
+  jogador=new Player (60,200,15,10);
+  portal=new Portal (500,height -1200,50,50);
+  
+}
