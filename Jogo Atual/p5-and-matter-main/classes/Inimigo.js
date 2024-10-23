@@ -6,12 +6,19 @@ class Inimigo {
     this.velocidadeX=velocidadeX
     this.velocidadeY=velocidadeY
     Matter.World.add (mundo,this.corpo)
+    this.animacao=loadAnimation (
+        'image/PNG/Inimigo.png'
+     )
     }
-    mostrar(){
-        var posicao=this.corpo.position
-        fill ("red")
-        rectMode (CENTER)
-        rect (posicao.x,posicao.y,this.largura,this.altura)
+    
+    
+    mostrar() {
+        var position=this.corpo.position
+     push ()
+     translate (position.x,position.y)
+     scale (3)
+     animation (this.animacao,0,0)
+     pop ()
     }
     mover (){
         Matter.Body.translate (this.corpo,{

@@ -4,11 +4,19 @@ class Portal {
     this.largura=largura
     this.altura=altura
     Matter.World.add (mundo,this.corpo)
+    this.animacao=loadAnimation (
+        'image/PNG/Portal.png'
+     )
     }
-    mostrar(){
-        var posicao=this.corpo.position
-        fill("purple")
-        ellipseMode (CENTER)
-        ellipse (posicao.x,posicao.y,this.largura,this.altura)
+
+    mostrar () {
+        var position=this.corpo.position 
+     push ()
+     translate (position.x,position.y)
+     scale (3)
+     animation (this.animacao,0,0)
+     pop ()
     }
 }
+ 
+ 
